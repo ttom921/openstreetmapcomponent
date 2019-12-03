@@ -1,0 +1,18 @@
+<mat-nav-list style="margin-top: 64px;width:192px;" color="primary">
+  <!-- <h3 matSubheader>示範用頁面</h3> -->
+  <mat-list-item [routerLink]="['/','dashboard','testshowpage']" (click)="handleClicked($event)">
+    <mat-icon md-list-icon>dns</mat-icon>OpenTestShow <span style="width: 100%;"></span>
+    <mat-icon matSuffix class="SufficIcon">keyboard_arrow_right</mat-icon>
+  </mat-list-item>
+
+  <mat-list-item [routerLink]="['/','dashboard','testopenstreet']" (click)="handleClicked($event)">
+    <mat-icon md-list-icon>dns</mat-icon>OpenStreet <span style="width: 100%;"></span>
+    <mat-icon matSuffix class="SufficIcon">keyboard_arrow_right</mat-icon>
+  </mat-list-item>
+  <mat-divider></mat-divider>
+  <!-- 另外一組選單 -->
+  <!-- <h3 matSubheader>其他頁面</h3> -->
+  <!-- <a [routerLink]="['/']" mat-list-item>首頁</a>
+        <a [routerLink]="['/']" mat-list-item>Google</a>
+        <a [routerLink]="['/']" mat-list-item>Facebook</a> -->
+</mat-nav-list>

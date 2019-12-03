@@ -1,0 +1,16 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="onClick()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span></span>
+  <!-- 在這之後的都會被推到右邊去 -->
+  <span class="fill-remaining-space"></span>
+
+  <mat-icon matPrefix style="margin-right: 10px;font-size: 24px;">account_circle</mat-icon>
+  <span style="margin-right: 32px;">{{user_id}}</span>
+
+  <button mat-icon-button>
+    <mat-icon>exit_to_app</mat-icon>
+  </button>
+
+</mat-toolbar>

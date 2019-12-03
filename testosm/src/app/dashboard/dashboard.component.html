@@ -1,0 +1,20 @@
+<header>
+  <app-header (toggle)="sidenav.toggle()"></app-header>
+</header>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav mode="over" [autoFocus]="false">
+    <app-sidebar (navClicked)="sidenav.close()"></app-sidebar>
+  </mat-sidenav>
+
+  <mat-sidenav-content #benji>
+    <div class="site">
+
+      <main>
+        <router-outlet #cite (activate)="onActivate($event)"></router-outlet>
+      </main>
+
+    </div>
+  </mat-sidenav-content>
+
+
+</mat-sidenav-container>
