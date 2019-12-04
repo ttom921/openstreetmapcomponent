@@ -1,7 +1,9 @@
 import * as L from 'leaflet';
+import * as _ from 'lodash';
 import { ColorMetaData } from '../model/color-meta-data.model';
 import { OSMColorManager } from './osm-color-manager';
 import { DivIcon } from 'leaflet';
+import { MarkerMetaData } from '../model/marker-meta-data.model';
 
 export class OSMMarkerclusterManager {
   private static _instance: OSMMarkerclusterManager = null;
@@ -18,10 +20,11 @@ export class OSMMarkerclusterManager {
     background-color: ${bgColour};
     `;
     let markerClusterOptions = {
-      singleMarkerMode: true,
+      singleMarkerMode: false,
       iconCreateFunction: function (cluster) {
         //console.log(cluster);
         var childCount = cluster.getChildCount();
+        var markers = cluster.getAllChildMarkers();
         // { html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) })
 
         var html = `<div style="${markerHtmlStyles}">
@@ -29,10 +32,11 @@ export class OSMMarkerclusterManager {
         <div>`;
         let icon;
         if (childCount == 1) {
+          //_.
           //剩下一個時的顯示
           let fgcolor = OSMColorManager.getInstance().getDefaultFGColor();
           let caption = `${childCount}`
-          icon = OSMMarkerclusterManager.getInstance().makeMarkerIcon(bgcolor, fgcolor, caption)
+          icon = OSMMarkerclusterManager.getInstance().makeMarkerIcon(bgcolor, fgcolor, caption);
         } else {
           icon = L.divIcon({
             iconSize: [40, 40],
@@ -69,16 +73,19 @@ export class OSMMarkerclusterManager {
     captionStyles = `
       transform: rotate(-45deg);
       display:block;
-      width: ${size * 3}px;
+      width: ${size * 9}px;
       text-align: center;
-      line-height: ${size * 3}px;
-      color:${colorText};
+      line-height: ${size * 9}px;
+      color: ${colorText};
+      margin-top: -${size * 9 / 3}px;
+      margin-left: -${size * 9 / 3}px;
+      font-size: 14px;
       `;
     let icon = L.divIcon({
       className: 'color-pin-' + mybgColour.replace('#', ''),
       iconAnchor: [border, size * 2 + border * 2],
       popupAnchor: [0, -(size * 3 + border)],
-      html: `<span style="${markerHtmlStyles}"><span style="${captionStyles}">${caption || ''}</span></span>`
+      html: `<div style="${markerHtmlStyles}"><span style="${captionStyles}">${caption || ''}</span></div>`
     });
 
     return icon;

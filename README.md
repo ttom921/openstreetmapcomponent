@@ -541,6 +541,17 @@ imports: [
     LeafletMarkerClusterModule,
   ]
 ```
+### 安裝lodash
+
+```
+npm install --save lodash 
+npm install --save-dev @types/lodash 
+```
+
+```typescript
+import * as _ from 'lodash'; 
+```
+
 ## 建立地圖元件
 
 因為測試了大概的功能，所以來整理一下建立一個元件，將有用的功能來封裝一下，以更之後可以來重複利用。

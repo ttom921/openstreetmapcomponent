@@ -21,9 +21,9 @@ export class ColorMetaData {
     this.an = 0.8;
   }
   SetDefatulFGColor() {
-    this.rn = 255;
-    this.gn = 255;
-    this.bn = 255;
+    this.rn = 3;
+    this.gn = 104;
+    this.bn = 3;
     this.an = 1.0;
   }
   /**

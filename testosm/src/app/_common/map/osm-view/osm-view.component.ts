@@ -139,7 +139,16 @@ export class OsmViewComponent implements OnInit, AfterViewInit {
     } else {
       mkclgoup = this.markerClusterGroups[gpname];
     }
-    let markdata = L.marker(markerMetaData.position);
+
+    // const myicon = L.icon({
+    //   iconUrl: 'assets/marker-icon.png',
+    //   shadowUrl: 'assets/markery-shadow.png'
+    // });
+    let bgcolor = OSMColorManager.getInstance().getColorByCompany(gpname);
+    let fgcolor = OSMColorManager.getInstance().getDefaultFGColor();
+    let caption = `${markerMetaData.car_uid}`
+    let myicon = OSMMarkerclusterManager.getInstance().makeMarkerIcon(bgcolor, fgcolor, caption);
+    let markdata = L.marker(markerMetaData.position, { icon: myicon });
     mkclgoup.addLayer(markdata);
   }
 }
