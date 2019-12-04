@@ -4,8 +4,10 @@ import { ColorMetaData } from '../model/color-meta-data.model';
 import { OSMColorManager } from './osm-color-manager';
 import { DivIcon } from 'leaflet';
 import { MarkerMetaData } from '../model/marker-meta-data.model';
+import { MakerClusterGroupMetaData } from '../model/maker-cluster-group-meta-data';
 
 export class OSMMarkerclusterManager {
+  //#region Singleton
   private static _instance: OSMMarkerclusterManager = null;
   private constructor() { };
   public static getInstance(): OSMMarkerclusterManager {
@@ -13,6 +15,37 @@ export class OSMMarkerclusterManager {
       this._instance = new OSMMarkerclusterManager();
     }
     return this._instance;
+  }
+  //#endregion Singleton
+  markerClusterGroups = {};
+
+  AddMarkerClusterGroup(gpname: string) {
+    let mkclgroup: L.MarkerClusterGroup;
+    if (this.HasMarkerClusterGroup(gpname) == false) {
+      //建立MarkerClusterGroup
+
+      let bgcolor = OSMColorManager.getInstance().getColorByCompany(gpname);
+      let markerClusterOptions = OSMMarkerclusterManager.getInstance().getMarkclusterOptions(bgcolor);
+      mkclgroup = L.markerClusterGroup(markerClusterOptions);
+      let markermetadatas: MarkerMetaData[] = [];
+      let obj: MakerClusterGroupMetaData = {
+        name: gpname,
+        group: mkclgroup,
+        markermetadatas: markermetadatas
+      };
+      this.markerClusterGroups[gpname] = obj;
+    } else {
+      mkclgroup = this.markerClusterGroups[gpname].group;
+    }
+  }
+  GetMarkerClusterGroup(gpname: string): MakerClusterGroupMetaData {
+    return this.markerClusterGroups[gpname];
+  }
+  private HasMarkerClusterGroup(name: string): boolean {
+    let ret = true;
+    //console.log(this.markerClusterGroups.hasOwnProperty(name));
+    ret = this.markerClusterGroups.hasOwnProperty(name);
+    return ret;
   }
   getMarkclusterOptions(bgcolor: ColorMetaData): L.MarkerClusterGroupOptions {
     let bgColour = bgcolor.RGBAToHexA();
@@ -100,4 +133,5 @@ export class OSMMarkerclusterManager {
 
     return icon;
   }
+  CreateMark
 }
