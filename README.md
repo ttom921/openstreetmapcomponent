@@ -484,6 +484,192 @@ const routes: Routes = [
 ```
 
 
+### 使用ngx-leaflet
 
+先來安裝相關的組件
 
+```
+npm install leaflet
+npm install --save @types/leaflet
+npm install @asymmetrik/ngx-leaflet
+```
+
+加入`markercluster`的元件
+
+```
+npm install leaflet.markercluster 
+npm install --save @types/leaflet.markercluster
+```
+
+加入CSS檔在`angular.json`，不然顯示會有問題
+
+```json
+"styles": [
+              "./node_modules/leaflet/dist/leaflet.css",
+    		 "./node_modules/dist/MarkerCluster.Default.css",
+              "src/styles.scss"
+            ],
+```
+
+加入模組在 app.module.ts 
+
+```typescript
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+
+...
+imports: [
+    ...
+    LeafletModule.forRoot()
+]
+...
+```
+
+在`DashboardModule`
+
+```typescript
+imports: [
+    //...
+    LeafletModule,
+    DashboardRoutingModule
+  ],
+  exports: [
+    //...
+    LeafletModule,
+    DashboardRoutingModule
+  ]
+```
+## 建立地圖元件
+
+因為測試了大概的功能，所以來整理一下建立一個元件，將有用的功能來封裝一下，以更之後可以來重複利用。
+
+先來建立元件
+
+```
+ng g component _common/map/OsmView
+```
+
+基本的地圖顯示
+
+在`src\app\_common\map\osm-view\osm-view.component.html`
+
+```html
+<div class="map" #osmmap leaflet [leafletOptions]="options" [leafletLayersControl]="layersControl" [leafletLayers]="layers" (leafletMapReady)="onMapReady($event)">
+</div>
+```
+
+在`src\app\_common\map\osm-view\osm-view.component.scss`
+
+```scss
+.map{
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+ }
+```
+
+在`src\app\_common\map\osm-view\osm-view.component.ts`
+
+```typescript
+import { Component, OnInit, Input, ViewChild, HostBinding, ElementRef, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { Layer, tileLayer, latLng } from 'leaflet';
+import * as L from 'leaflet';
+
+@Component({
+  selector: 'osm-view',
+  templateUrl: './osm-view.component.html',
+  styleUrls: ['./osm-view.component.scss'],
+  encapsulation: ViewEncapsulation.None
+})
+export class OsmViewComponent implements OnInit, AfterViewInit {
+
+  @ViewChild('osmmap', { static: true }) osmap: ElementRef;
+  @HostBinding('style.width') @Input() width = '20vw';
+  @HostBinding('style.height') @Input() height = '20vh';
+  /**
+    * 設定中心的經緯度
+    * @memberof OsmViewComponent
+    */
+  @Input() center = { lat: 24.941422, lng: 121.311301 };
+
+  /**
+   * 目前的zoom的大小
+   * @memberof OsmViewComponent
+   */
+  @Input() zoom = 14;
+
+  map: L.Map;// Values to bind to Leaflet Directive
+  //公用的顯示layer
+  layers: Layer[] = [];
+  options = {};
+  layersControl: {};
+  //基礎的layer
+  LAYER_OSM: any;
+
+  constructor() {
+    this.CreateLayer();
+  }
+
+  ngOnInit() {
+    this.initMapLayer();
+  }
+  ngAfterViewInit(): void {
+    this.osmap.nativeElement.style.width = this.width;
+    this.osmap.nativeElement.style.height = this.height;
+    //let fmt = `width:${this.width} height:${this.height}`;
+    //console.log(fmt);
+  }
+  //#region 建立layer
+  /**
+   * 建立基本的layer
+   * @memberof OsmViewComponent
+   */
+  CreateLayer() {
+    console.log("CreateLayer----------------------");
+    this.CreateBaseLayer();
+
+  }
+  CreateBaseLayer() {
+    console.log("CreateBaseLayer----------------------");
+    //定義baseLayers
+    this.LAYER_OSM = {
+      id: 'openstreetmap',
+      name: 'Open Street Map',
+      enable: true,
+      layer: tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,//設定最大的Zoom
+        attribution: 'Open Street Map'
+      })
+    }
+  }
+  //#endregion 建立layer
+  initMapLayer() {
+    console.log("initMapLayer----------------------");
+    this.layersControl = {
+      baseLayers: {
+        'Open Street Map': this.LAYER_OSM.layer,
+      },
+      overlays: {
+        //Square: this.square.layer,
+        //Polygon: this.polygon.layer,
+        //Marker: this.marker.layer,
+        //GeoJSON: this.geoJSON.layer
+      }
+    };
+    this.options = {
+      layers: [
+        this.LAYER_OSM.layer,
+        //markgrp.layerGroup,
+        //polylinegrp.layerGroup,
+      ],//有設定預設才會選到
+      zoom: this.zoom,
+      //zoomControl: true,//移除預設的
+      center: latLng(this.center)//latLng(24.9345812, 121.2728323)
+    }
+  }
+  onMapReady(ev) {
+    console.log("onMapReady----------------------");
+    this.map = ev;
+  }
+}
+```
 

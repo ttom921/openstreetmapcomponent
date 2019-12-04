@@ -7,13 +7,22 @@ import { SharedAngularMaterialModule } from '../share/shared-angular-material/sh
 import { DashboardComponent } from './dashboard.component';
 import { TestShowPageComponent } from './page/test-show-page/test-show-page.component';
 import { TestOpenStreetComponent } from './page/test-open-street/test-open-street.component';
+import { OsmViewComponent } from '../_common/map/osm-view/osm-view.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 
 @NgModule({
-  declarations: [DashboardComponent, HeaderComponent, SidebarComponent, TestShowPageComponent, TestOpenStreetComponent],
+  declarations: [
+    DashboardComponent,
+    HeaderComponent,
+    SidebarComponent,
+    OsmViewComponent,
+    TestShowPageComponent,
+    TestOpenStreetComponent],
   imports: [
     SharedAngularMaterialModule,
-    DashboardRoutingModule
+    LeafletModule,
+    DashboardRoutingModule,
   ],
   exports: [
     SharedAngularMaterialModule,
