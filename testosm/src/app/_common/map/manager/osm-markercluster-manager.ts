@@ -23,28 +23,38 @@ export class OSMMarkerclusterManager {
       singleMarkerMode: false,
       iconCreateFunction: function (cluster) {
         //console.log(cluster);
-        var childCount = cluster.getChildCount();
-        var markers = cluster.getAllChildMarkers();
-        // { html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) })
-
-        var html = `<div style="${markerHtmlStyles}">
+        let childCount = cluster.getChildCount();
+        let html = `<div style="${markerHtmlStyles}">
         <span>${childCount}</span>
         <div>`;
-        let icon;
-        if (childCount == 1) {
-          //_.
-          //剩下一個時的顯示
-          let fgcolor = OSMColorManager.getInstance().getDefaultFGColor();
-          let caption = `${childCount}`
-          icon = OSMMarkerclusterManager.getInstance().makeMarkerIcon(bgcolor, fgcolor, caption);
-        } else {
-          icon = L.divIcon({
-            iconSize: [40, 40],
-            className: 'marker-cluster',
-            html: html
-          });
-        }
+        let icon = L.divIcon({
+          iconSize: [40, 40],
+          className: 'marker-cluster',
+          html: html
+        });
         return icon;
+
+        //var markers = cluster.getAllChildMarkers();
+        // { html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) })
+
+        // var html = `<div style="${markerHtmlStyles}">
+        // <span>${childCount}</span>
+        // <div>`;
+        // let icon;
+        // if (childCount == 1) {
+        //   //_.
+        //   //剩下一個時的顯示
+        //   let fgcolor = OSMColorManager.getInstance().getDefaultFGColor();
+        //   let caption = `${childCount}`
+        //   icon = OSMMarkerclusterManager.getInstance().makeMarkerIcon(bgcolor, fgcolor, caption);
+        // } else {
+        //   icon = L.divIcon({
+        //     iconSize: [40, 40],
+        //     className: 'marker-cluster',
+        //     html: html
+        //   });
+        // }
+        // return icon;
       }
     };
     return markerClusterOptions;
