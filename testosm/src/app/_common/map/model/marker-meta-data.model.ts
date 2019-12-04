@@ -15,7 +15,8 @@ export interface MarkerData {
  * @implements {MarkerData}
  */
 export class MarkerMetaData implements MarkerData {
-  id: string; car_uid: string;
+  id: string;
+  car_uid: string;
   car_group_name: string;
   name: string;
   description: string;

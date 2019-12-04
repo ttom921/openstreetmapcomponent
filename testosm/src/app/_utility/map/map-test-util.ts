@@ -11,8 +11,8 @@ export class MapTestUtil {
   }
   getCenterRandom(center: LatLngExpression): LatLngExpression {
     let data: LatLngExpression;
-    let lat = center["lat"] + this.generateRandomNumber();
-    let lng = center["lng"] + this.generateRandomNumber();
+    let lat = center[0] + this.generateRandomNumber();
+    let lng = center[1] + this.generateRandomNumber();
     data = [lat, lng];
     return data;
   }

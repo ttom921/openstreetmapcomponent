@@ -9,6 +9,7 @@ import { TestShowPageComponent } from './page/test-show-page/test-show-page.comp
 import { TestOpenStreetComponent } from './page/test-open-street/test-open-street.component';
 import { OsmViewComponent } from '../_common/map/osm-view/osm-view.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
 
 
 @NgModule({
@@ -22,10 +23,13 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
   imports: [
     SharedAngularMaterialModule,
     LeafletModule,
+    LeafletMarkerClusterModule,
     DashboardRoutingModule,
   ],
   exports: [
     SharedAngularMaterialModule,
+    LeafletModule,
+    LeafletMarkerClusterModule,
     DashboardRoutingModule
   ]
 })

@@ -490,7 +490,7 @@ const routes: Routes = [
 
 ```
 npm install leaflet
-npm install --save @types/leaflet
+npm install -–save-dev @types/leaflet
 npm install @asymmetrik/ngx-leaflet
 ```
 
@@ -498,7 +498,8 @@ npm install @asymmetrik/ngx-leaflet
 
 ```
 npm install leaflet.markercluster 
-npm install --save @types/leaflet.markercluster
+npm install -–save-dev @types/leaflet.markercluster
+npm install @asymmetrik/ngx-leaflet-markercluster
 ```
 
 加入CSS檔在`angular.json`，不然顯示會有問題
@@ -530,12 +531,14 @@ imports: [
 imports: [
     //...
     LeafletModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    LeafletMarkerClusterModule,
   ],
   exports: [
     //...
     LeafletModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    LeafletMarkerClusterModule,
   ]
 ```
 ## 建立地圖元件
