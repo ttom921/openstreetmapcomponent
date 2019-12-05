@@ -135,7 +135,7 @@ export class OsmViewComponent implements OnInit, AfterViewInit {
       // //加入到markerClusterGroups裏面
       // this.markerClusterGroups[gpname] = mkclgoup;
       //建立markergroupcluster
-      OSMMarkerclusterManager.getInstance().AddMarkerClusterGroup(gpname);
+      OSMMarkerclusterManager.getInstance().CreateMarkerClusterGroup(gpname);
       mkclgroupmetadata = OSMMarkerclusterManager.getInstance().GetMarkerClusterGroup(gpname);
       //加入overlays
       let overlays = this.layersControl["overlays"];
@@ -149,11 +149,12 @@ export class OsmViewComponent implements OnInit, AfterViewInit {
     //   iconUrl: 'assets/marker-icon.png',
     //   shadowUrl: 'assets/markery-shadow.png'
     // });
-    let bgcolor = OSMColorManager.getInstance().getColorByCompany(gpname);
-    let fgcolor = OSMColorManager.getInstance().getDefaultFGColor();
-    let caption = `${markerMetaData.car_uid}`
-    let myicon = OSMMarkerclusterManager.getInstance().makeMarkerIcon(bgcolor, fgcolor, caption);
-    let markdata = L.marker(markerMetaData.position, { icon: myicon });
-    mkclgroupmetadata.group.addLayer(markdata);
+    // let bgcolor = OSMColorManager.getInstance().getColorByCompany(gpname);
+    // let fgcolor = OSMColorManager.getInstance().getDefaultFGColor();
+    // let caption = `${markerMetaData.car_uid}`
+    // let myicon = OSMMarkerclusterManager.getInstance().makeMarkerIcon(bgcolor, fgcolor, caption);
+    // let markdata = L.marker(markerMetaData.position, { icon: myicon });
+    // mkclgroupmetadata.group.addLayer(markdata);
+    OSMMarkerclusterManager.getInstance().AddMarkMetaDataToGroup(gpname, markerMetaData);
   }
 }

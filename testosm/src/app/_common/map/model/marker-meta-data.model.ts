@@ -1,4 +1,4 @@
-import { LatLngExpression } from 'leaflet';
+import { LatLngExpression, Marker } from 'leaflet';
 
 export interface MarkerData {
   id: string;//保留
@@ -7,6 +7,7 @@ export interface MarkerData {
   name: string;//公司名稱
   description: string;
   position: LatLngExpression;
+  markerInstance: Marker;
 }
 /**
  * Mark的中繼資料
@@ -21,6 +22,10 @@ export class MarkerMetaData implements MarkerData {
   name: string;
   description: string;
   position: LatLngExpression;
-
+  markerInstance: Marker;
+  UpdatePos(otherLatLng: LatLngExpression) {
+    this.position = otherLatLng;
+    this.markerInstance.setLatLng(otherLatLng);
+  }
 
 }

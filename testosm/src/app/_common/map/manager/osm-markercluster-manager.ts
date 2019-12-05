@@ -19,7 +19,7 @@ export class OSMMarkerclusterManager {
   //#endregion Singleton
   markerClusterGroups = {};
 
-  AddMarkerClusterGroup(gpname: string) {
+  CreateMarkerClusterGroup(gpname: string) {
     let mkclgroup: L.MarkerClusterGroup;
     if (this.HasMarkerClusterGroup(gpname) == false) {
       //建立MarkerClusterGroup
@@ -46,6 +46,17 @@ export class OSMMarkerclusterManager {
     //console.log(this.markerClusterGroups.hasOwnProperty(name));
     ret = this.markerClusterGroups.hasOwnProperty(name);
     return ret;
+  }
+  AddMarkMetaDataToGroup(gpname: string, markerMetaData: MarkerMetaData) {
+    let mkclGroupMetaData: MakerClusterGroupMetaData = this.GetMarkerClusterGroup(gpname);
+    let bgcolor = OSMColorManager.getInstance().getColorByCompany(gpname);
+    let fgcolor = OSMColorManager.getInstance().getDefaultFGColor();
+    let caption = `${markerMetaData.car_uid}`
+    let myicon = OSMMarkerclusterManager.getInstance().makeMarkerIcon(bgcolor, fgcolor, caption);
+    let markdata = L.marker(markerMetaData.position, { icon: myicon });
+    markerMetaData.markerInstance = markdata;
+    mkclGroupMetaData.markermetadatas.push(markerMetaData);
+    mkclGroupMetaData.group.addLayer(markdata);
   }
   getMarkclusterOptions(bgcolor: ColorMetaData): L.MarkerClusterGroupOptions {
     let bgColour = bgcolor.RGBAToHexA();
@@ -133,5 +144,4 @@ export class OSMMarkerclusterManager {
 
     return icon;
   }
-  CreateMark
 }
