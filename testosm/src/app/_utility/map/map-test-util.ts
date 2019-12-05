@@ -27,4 +27,13 @@ export class MapTestUtil {
     //alert(highlightedNumber);
     return highlightedNumber * plusOrMinus;
   }
+  getneratelatlng() {
+    let min = 0.002;
+    let max = 0.008;
+    let plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+    let highlightedNumber = Math.random() * (max - min) + min;
+
+    //alert(highlightedNumber);
+    return highlightedNumber * plusOrMinus;
+  }
 }

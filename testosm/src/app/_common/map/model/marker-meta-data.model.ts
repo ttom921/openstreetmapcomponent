@@ -1,4 +1,4 @@
-import { LatLngExpression, Marker } from 'leaflet';
+import { LatLngExpression, Marker, LatLng, latLng } from 'leaflet';
 
 export interface MarkerData {
   id: string;//保留
@@ -21,10 +21,10 @@ export class MarkerMetaData implements MarkerData {
   car_group_name: string;
   name: string;
   description: string;
-  position: LatLngExpression;
+  position: LatLng;
   markerInstance: Marker;
   UpdatePos(otherLatLng: LatLngExpression) {
-    this.position = otherLatLng;
+    this.position = latLng(otherLatLng);
     this.markerInstance.setLatLng(otherLatLng);
   }
 
