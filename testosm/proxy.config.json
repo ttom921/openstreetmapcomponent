@@ -1,0 +1,12 @@
+{
+  "/api": {
+    "target": "http://www.yournavigation.org",
+    "secure": false,
+    "changeOrigin": false
+  },
+  "/opendata": {
+    "target": "http://data.taipei",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

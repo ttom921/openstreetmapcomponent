@@ -1,13 +1,14 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { LatLngExpression, latLng } from 'leaflet';
+import { LatLngExpression, latLng, LatLng } from 'leaflet';
 import { MarkerMetaData } from 'src/app/_common/map/model/marker-meta-data.model';
 import { MapTestUtil } from 'src/app/_utility/map/map-test-util';
 import { OsmViewComponent } from 'src/app/_common/map/osm-view/osm-view.component';
-import { element } from 'protractor';
 import { OSMMarkerclusterManager } from 'src/app/_common/map/manager/osm-markercluster-manager';
 import { MakerClusterGroupMetaData } from 'src/app/_common/map/model/maker-cluster-group-meta-data';
 import { OsmDataService } from 'src/app/_services/map/osm-data.service';
-
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { PolylineMetaData } from 'src/app/_common/map/model/polyline-meta-data.model';
 @Component({
   selector: 'app-test-open-street',
   templateUrl: './test-open-street.component.html',
@@ -33,10 +34,18 @@ export class TestOpenStreetComponent implements OnInit, AfterViewInit {
 
   @ViewChild('osmmap', { static: true }) osmap: OsmViewComponent;
   constructor(
-    private osmDataService: OsmDataService
+    private osmDataService: OsmDataService,
+    private http: HttpClient
   ) { }
 
   ngOnInit() {
+    console.log("ngOnInit------------------");
+    // //let url = 'http://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=0b544701-fb47-4fa9-90f1-15b1987da0f5';
+    // let url = '/opendata/datalist/apiAccess?scope=resourceAquire&rid=0b544701-fb47-4fa9-90f1-15b1987da0f5';
+    // let data$ = this.http.get(url).pipe(map(x => x));
+    // data$.subscribe(data => {
+    //   console.log(data);
+    // });
 
   }
   ngAfterViewInit(): void {
@@ -63,7 +72,50 @@ export class TestOpenStreetComponent implements OnInit, AfterViewInit {
 
     });
   }
-  Testmakercluster() {
+  TestRouterAPI() {
+    //flat=24.933165613697&flon=121.26646518242&
+    //tlat=24.933905008646&tlon=121.26541912091
+    let startpos: LatLngExpression = [24.933165613697, 121.26646518242];
+    let endpos: LatLngExpression = [24.933905008646, 121.26541912091];
+    // this.osmDataService.getRouter(latLng(startpos), latLng(endpos)).subscribe(data => {
+    //   console.log(data);
+    // });
+
+    // let latlngs: LatLngExpression[] = [];
+    // latlngs.push(startpos);
+    // latlngs.push(endpos);
+    // let polylineMetaData: PolylineMetaData = new PolylineMetaData();
+    // polylineMetaData.description = "this a test";
+    // polylineMetaData.name = "hi-8888";
+    // polylineMetaData.latlngs = latlngs;
+    // this.osmap.AddOverPolylineLayer(polylineMetaData);
+
+    this.osmDataService.getRouter2(latLng(startpos), latLng(endpos)).subscribe(data => {
+      //console.log(data);
+
+      //console.log(data.coordinates);
+      let polylineMetaData: PolylineMetaData = new PolylineMetaData();
+      polylineMetaData.description = "this a test";
+      polylineMetaData.name = "hi-8888";
+      let latlngs: LatLngExpression[] = [];
+      latlngs.push([24.933165, 121.266465]);
+      latlngs.push([24.933277, 121.264675]);
+      // data.coordinates.forEach(element => {
+      //   let lat = element[0];
+      //   let lng = element[1];
+      //   // console.log(element.lat);
+      //   // console.log(element.lng);
+      //   latlngs.push([lat, lng]);
+      // });
+      polylineMetaData.latlngs = latlngs;
+      this.osmap.AddOverPolylineLayer(polylineMetaData);
+      console.log(latlngs);
+    });
+
+
+
+  }
+  TestUpdateMarkClusterPosition() {
     this.osmDataService.getInterval().subscribe(data => {
       let mkclgroupmetadata: MakerClusterGroupMetaData;
       this.companysata.forEach(element => {
@@ -84,6 +136,9 @@ export class TestOpenStreetComponent implements OnInit, AfterViewInit {
 
       });
     });
+  }
+  Testmakercluster() {
+
 
   }
 }

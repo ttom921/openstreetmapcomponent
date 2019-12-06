@@ -6,6 +6,9 @@ import { OSMMarkerclusterManager } from '../manager/osm-markercluster-manager';
 import { ColorMetaData } from '../model/color-meta-data.model';
 import { OSMColorManager } from '../manager/osm-color-manager';
 import { MakerClusterGroupMetaData } from '../model/maker-cluster-group-meta-data';
+import { PolylineMetaData } from '../model/polyline-meta-data.model';
+import { PolylineGroupMetaData } from '../model/polyline-group-meta-data.model';
+import { OSMPolylinegroupManager } from '../manager/osm-polylinegroup-manager';
 
 @Component({
   selector: 'osm-view',
@@ -156,5 +159,21 @@ export class OsmViewComponent implements OnInit, AfterViewInit {
     // let markdata = L.marker(markerMetaData.position, { icon: myicon });
     // mkclgroupmetadata.group.addLayer(markdata);
     OSMMarkerclusterManager.getInstance().AddMarkMetaDataToGroup(gpname, markerMetaData);
+  }
+  AddOverPolylineLayer(polylineMetaData: PolylineMetaData) {
+    let gpname = polylineMetaData.name;
+    let polylineGroupMetaData: PolylineGroupMetaData;
+    //檢查是否已經有此OverLayer
+    if (this.HasOverlay(gpname) == false) {
+      //建立polylinegroup
+      OSMPolylinegroupManager.getInstance().CreatePolylineGroup(gpname);
+      polylineGroupMetaData = OSMPolylinegroupManager.getInstance().GetPolylineGroup(gpname);
+      //加入overlays
+      let overlays = this.layersControl["overlays"];
+      overlays[gpname] = polylineGroupMetaData.group;
+    } else {
+      polylineGroupMetaData = OSMPolylinegroupManager.getInstance().GetPolylineGroup(gpname);
+    }
+    OSMPolylinegroupManager.getInstance().AddPolyMetaDataToGroup(gpname, polylineMetaData);
   }
 }
