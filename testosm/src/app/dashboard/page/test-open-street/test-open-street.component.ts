@@ -9,6 +9,7 @@ import { OsmDataService } from 'src/app/_services/map/osm-data.service';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { PolylineMetaData } from 'src/app/_common/map/model/polyline-meta-data.model';
+import { GeoJsonMetaData } from 'src/app/_common/map/model/geojson-meta-data.model';
 @Component({
   selector: 'app-test-open-street',
   templateUrl: './test-open-street.component.html',
@@ -70,6 +71,21 @@ export class TestOpenStreetComponent implements OnInit, AfterViewInit {
         this.osmap.AddOverMakerClusterLayer(markerMetaData);
       }
 
+    });
+  }
+  TestGeoRouteAPI() {
+    let startpos: LatLngExpression = [24.933165613697, 121.26646518242];
+    let endpos: LatLngExpression = [24.933905008646, 121.26541912091];
+    this.osmDataService.getRouter(latLng(startpos), latLng(endpos)).subscribe(data => {
+      let geoJsonMetaData: GeoJsonMetaData = new GeoJsonMetaData();
+      geoJsonMetaData.name = "8888";
+      console.log(data);
+      //geoJsonMetaData.type = data.type;
+      geoJsonMetaData.lineString = {
+        type: data.type,
+        coordinates: data.coordinates
+      };
+      this.osmap.AddOverGeojsonLayer(geoJsonMetaData);
     });
   }
   TestRouterAPI() {

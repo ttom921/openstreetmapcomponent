@@ -9,6 +9,10 @@ import { MakerClusterGroupMetaData } from '../model/maker-cluster-group-meta-dat
 import { PolylineMetaData } from '../model/polyline-meta-data.model';
 import { PolylineGroupMetaData } from '../model/polyline-group-meta-data.model';
 import { OSMPolylinegroupManager } from '../manager/osm-polylinegroup-manager';
+import { GeoJsonMetaData } from '../model/geojson-meta-data.model';
+import { GeojsonGroupMetaData } from '../model/geojson-group-meta-data.model';
+import { OSMGeojsongroupManager } from '../manager/osm-geojsongroup-manager';
+import { LineString } from 'geojson';
 
 @Component({
   selector: 'osm-view',
@@ -160,6 +164,11 @@ export class OsmViewComponent implements OnInit, AfterViewInit {
     // mkclgroupmetadata.group.addLayer(markdata);
     OSMMarkerclusterManager.getInstance().AddMarkMetaDataToGroup(gpname, markerMetaData);
   }
+  /**
+   * 加入Polyline到layer的group
+   * @param {PolylineMetaData} polylineMetaData
+   * @memberof OsmViewComponent
+   */
   AddOverPolylineLayer(polylineMetaData: PolylineMetaData) {
     let gpname = polylineMetaData.name;
     let polylineGroupMetaData: PolylineGroupMetaData;
@@ -175,5 +184,38 @@ export class OsmViewComponent implements OnInit, AfterViewInit {
       polylineGroupMetaData = OSMPolylinegroupManager.getInstance().GetPolylineGroup(gpname);
     }
     OSMPolylinegroupManager.getInstance().AddPolyMetaDataToGroup(gpname, polylineMetaData);
+  }
+  AddOverGeojsonLayer(geoJsonMetaData: GeoJsonMetaData) {
+    let gpname = geoJsonMetaData.name;
+    let geojsonGroupMetaData: GeojsonGroupMetaData;
+    //檢查是否已經有此OverLayer
+    if (this.HasOverlay(gpname) == false) {
+      //建立geojsongroup
+      OSMGeojsongroupManager.getInstance().CreateGeojsonGroup(gpname);
+      geojsonGroupMetaData = OSMGeojsongroupManager.getInstance().GetGeojsonGroup(gpname);
+
+      // var myLines: LineString = {
+      //   "type": "LineString",
+      //   "coordinates": [[121.266465, 24.933165], [121.264675, 24.933277]]
+      // };
+      // var myStyle = {
+      //   "color": "#ff7800",
+      //   "weight": 5,
+      //   "opacity": 0.65
+      // };
+      // let layer = L.geoJSON(myLines, {
+      //   style: myStyle
+      // });
+      // let overlays = this.layersControl["overlays"];
+      // overlays[gpname] = layer;
+
+      //加入overlays
+      let overlays = this.layersControl["overlays"];
+      overlays[gpname] = geojsonGroupMetaData.group;
+
+    } else {
+      geojsonGroupMetaData = OSMGeojsongroupManager.getInstance().GetGeojsonGroup(gpname);
+    }
+    OSMGeojsongroupManager.getInstance().AddGeojsonMetaDataToGroup(gpname, geoJsonMetaData);
   }
 }
