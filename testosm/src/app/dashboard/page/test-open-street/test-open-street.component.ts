@@ -74,7 +74,9 @@ export class TestOpenStreetComponent implements OnInit, AfterViewInit {
     });
   }
   TestGeoRouteAPI() {
-    let startpos: LatLngExpression = [24.933165613697, 121.26646518242];
+    //
+    //let startpos: LatLngExpression = [24.933165613697, 121.26646518242];
+    let startpos: LatLngExpression = [24.943096, 121.378939];
     let endpos: LatLngExpression = [24.933905008646, 121.26541912091];
     this.osmDataService.getRouter(latLng(startpos), latLng(endpos)).subscribe(data => {
       let geoJsonMetaData: GeoJsonMetaData = new GeoJsonMetaData();
