@@ -33,6 +33,25 @@ export class TestOpenStreetComponent implements OnInit, AfterViewInit {
       }
     ];
 
+  //測式的車子的資料
+  carslatlngdatas: {
+    car_uid: string,
+    startpos: LatLngExpression,
+    endpos: LatLngExpression,
+  }[] = [
+      {
+        car_uid: "8888",
+        startpos: [24.943096, 121.378939],
+        endpos: [24.933905008646, 121.26541912091],
+      },
+      {
+        car_uid: "666",
+        startpos: [24.933905008646, 121.26541912091],
+        endpos: [24.943096, 121.378939],
+      }
+    ];
+
+
   @ViewChild('osmmap', { static: true }) osmap: OsmViewComponent;
   constructor(
     private osmDataService: OsmDataService,
@@ -74,21 +93,33 @@ export class TestOpenStreetComponent implements OnInit, AfterViewInit {
     });
   }
   TestGeoRouteAPI() {
-    //
-    //let startpos: LatLngExpression = [24.933165613697, 121.26646518242];
-    let startpos: LatLngExpression = [24.943096, 121.378939];
-    let endpos: LatLngExpression = [24.933905008646, 121.26541912091];
-    this.osmDataService.getRouter(latLng(startpos), latLng(endpos)).subscribe(data => {
-      let geoJsonMetaData: GeoJsonMetaData = new GeoJsonMetaData();
-      geoJsonMetaData.name = "8888";
-      console.log(data);
-      //geoJsonMetaData.type = data.type;
-      geoJsonMetaData.lineString = {
-        type: data.type,
-        coordinates: data.coordinates
-      };
-      this.osmap.AddOverGeojsonLayer(geoJsonMetaData);
+    this.carslatlngdatas.forEach(element => {
+      this.osmDataService.getRouter(latLng(element.startpos), latLng(element.endpos)).subscribe(data => {
+        let geoJsonMetaData: GeoJsonMetaData = new GeoJsonMetaData();
+        geoJsonMetaData.name = element.car_uid;
+        geoJsonMetaData.colorMetaData.getRandomColor();
+        geoJsonMetaData.lineString = {
+          type: data.type,
+          coordinates: data.coordinates
+        };
+        this.osmap.AddOverGeojsonLayer(geoJsonMetaData);
+      });
     });
+    //
+    // let startpos: LatLngExpression = [24.943096, 121.378939];
+    // let endpos: LatLngExpression = [24.933905008646, 121.26541912091];
+    // this.osmDataService.getRouter(latLng(startpos), latLng(endpos)).subscribe(data => {
+    //   let geoJsonMetaData: GeoJsonMetaData = new GeoJsonMetaData();
+    //   geoJsonMetaData.name = "8888";
+    //   geoJsonMetaData.colorMetaData.getRandomColor();
+    //   console.log(data);
+    //   //geoJsonMetaData.type = data.type;
+    //   geoJsonMetaData.lineString = {
+    //     type: data.type,
+    //     coordinates: data.coordinates
+    //   };
+    //   this.osmap.AddOverGeojsonLayer(geoJsonMetaData);
+    // });
   }
   TestRouterAPI() {
     //flat=24.933165613697&flon=121.26646518242&

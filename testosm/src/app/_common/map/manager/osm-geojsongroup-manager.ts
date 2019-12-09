@@ -44,20 +44,20 @@ export class OSMGeojsongroupManager {
   AddGeojsonMetaDataToGroup(gpname: string, geoJsonMetaData: GeoJsonMetaData) {
     let geojsonGroupMetaData: GeojsonGroupMetaData = this.GetGeojsonGroup(gpname);
     //color
-    var myLines: LineString = {
-      "type": "LineString",
-      "coordinates": [[121.266465, 24.933165], [121.264675, 24.933277]]
-    };
-    var myStyle = {
-      "color": "#ff7800",
-      "weight": 5,
-      "opacity": 0.65
-    };
+    // var myLines: LineString = {
+    //   "type": "LineString",
+    //   "coordinates": [[121.266465, 24.933165], [121.264675, 24.933277]]
+    // };
+    // var myStyle = {
+    //   "color": "#ff7800",
+    //   "weight": 5,
+    //   "opacity": 0.65
+    // };
     // let layer = L.geoJSON(myLines, {
     //   style: myStyle
     // });
     let layer = L.geoJSON(geoJsonMetaData.lineString, {
-      style: this.getGeojsonStyle()
+      style: this.getGeojsonStyle(geoJsonMetaData.colorMetaData),
     });
     console.log(geoJsonMetaData.lineString);
 
@@ -65,11 +65,11 @@ export class OSMGeojsongroupManager {
     //geojsonGroupMetaData.group.addLayer(geojsondata);
     geojsonGroupMetaData.group.addLayer(layer);
   }
-  getGeojsonStyle(): any {
-    let colorMetaData: ColorMetaData = new ColorMetaData();
-    colorMetaData.SetDefatulFGColor();
+  getGeojsonStyle(colorMetaData: ColorMetaData): any {
+    // let colorMetaData: ColorMetaData = new ColorMetaData();
+    // colorMetaData.SetDefatulFGColor();
     let geojsonStyle = {
-      "color": "#ff7800",//colorMetaData.RGBAToHexA(),//"#ff7800",
+      "color": colorMetaData.RGBAToHexA(),//"#ff7800",
       "weight": 5,
       "opacity": 0.65
     };
