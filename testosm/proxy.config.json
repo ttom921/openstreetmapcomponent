@@ -4,6 +4,11 @@
     "secure": false,
     "changeOrigin": false
   },
+  "/ors": {
+    "target": "http://ttom.tplinkdns.com:8080",
+    "secure": false,
+    "changeOrigin": false
+  },
   "/opendata": {
     "target": "http://data.taipei",
     "secure": false,

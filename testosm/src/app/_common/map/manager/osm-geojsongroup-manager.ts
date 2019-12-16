@@ -59,7 +59,7 @@ export class OSMGeojsongroupManager {
     let layer = L.geoJSON(geoJsonMetaData.lineString, {
       style: this.getGeojsonStyle(geoJsonMetaData.colorMetaData),
     });
-    console.log(geoJsonMetaData.lineString);
+    //console.log(geoJsonMetaData.lineString);
 
     //let geojsondata = geoJSON(geoJsonMetaData.geoobj, this.getGeojsonStyle());// polyline(polylineMetaData.latlngs, this.getPolylineOptions());
     //geojsonGroupMetaData.group.addLayer(geojsondata);

@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { PolylineMetaData } from 'src/app/_common/map/model/polyline-meta-data.model';
 import { GeoJsonMetaData } from 'src/app/_common/map/model/geojson-meta-data.model';
+import { Observable, of } from 'rxjs';
 @Component({
   selector: 'app-test-open-street',
   templateUrl: './test-open-street.component.html',
@@ -164,6 +165,158 @@ export class TestOpenStreetComponent implements OnInit, AfterViewInit {
 
 
   }
+  TestGeoRouteORSAPI() {
+    // let startpos: LatLngExpression = [24.934851, 121.280228];
+    // let endpos: LatLngExpression = [24.931144, 121.280014];
+    // this.osmDataService.getRouterORS(latLng(startpos), latLng(endpos)).subscribe(data => {
+    //   console.log(data);
+    // });
+    this.carslatlngdatas.forEach(element => {
+      this.osmDataService.getRouterORS(latLng(element.startpos), latLng(element.endpos)).subscribe(data => {
+        //console.log(data);
+        let features = data.features;
+        //console.log(features);
+        let geometry = features[0].geometry;
+        //console.log(geometry);
+        let geoJsonMetaData: GeoJsonMetaData = new GeoJsonMetaData();
+        geoJsonMetaData.name = element.car_uid;
+        geoJsonMetaData.colorMetaData.getRandomColor();
+        geoJsonMetaData.lineString = {
+          type: geometry.type,
+          coordinates: geometry.coordinates
+        };
+        this.osmap.AddOverGeojsonLayer(geoJsonMetaData);
+
+      });
+    });
+
+
+  }
+  TestCarRouteMap() {
+    this.osmDataService.getCarHisRoute().subscribe(geometrydata => {
+      // console.log(geometrydata);
+      // let geoJsonMetaData: GeoJsonMetaData = new GeoJsonMetaData();
+      // geoJsonMetaData.name = "mycar";
+      // geoJsonMetaData.colorMetaData.SetDefatulFGColor();
+      // geoJsonMetaData.lineString = {
+      //   type: geometrydata.type,
+      //   coordinates: geometrydata.coordinates
+      // };
+      // this.osmap.AddOverGeojsonLayer(geoJsonMetaData);
+
+      let postgeodata = null;
+      let geodata = this.getGeometrydata(geometrydata.coordinates);
+      this.osmDataService.PostCarHisData(geodata).subscribe(data => {
+        let features = data.features;
+        console.log(features);
+        let geometry = features[0].geometry;
+        let coordinates = geometry.coordinates;
+
+        let porcgeodata = {
+          "type": "LineString",
+          "coordinates": coordinates,
+        };
+
+        // let features = data.features;
+        // console.log(features);
+        // let geometry = features[0].geometry;
+        // let coordinates = geometry.coordinates;
+        // let properties = features[0].properties;
+        // //console.log(properties);
+        // let way_points = properties.way_points;
+        // let mycordata = [];
+        // way_points.forEach(element => {
+        //   mycordata.push(coordinates[element]);
+        // });
+        // //console.log(mycordata);
+        // let porcgeodata = {
+        //   "type": "LineString",
+        //   "coordinates": mycordata,
+        // };
+        // //console.log(porcgeodata);
+        this.AddOverGeojsonLayer(porcgeodata);
+      });
+      //this.AddOverGeojsonLayer(postdata);
+      //console.log(postdata);
+      // this.osmDataService.PostCarHisData(postdata).subscribe(data => {
+      //   //console.log(data);
+      //   //postgeodata = data;
+      //   //this.AddOverGeojsonLayer(data);
+      // });
+
+
+    });
+
+  }
+  getCarmapdata(geodata) {
+    this.osmDataService.PostCarHisData(geodata).subscribe(data => {
+      //console.log(data);
+      //postgeodata = data;
+      //this.AddOverGeojsonLayer(data);
+      let features = data.features;
+      //console.log(features);
+      let geometry = features[0].geometry;
+      let coordinates = geometry.coordinates;
+      let properties = features[0].properties;
+      //console.log(properties);
+      let way_points = properties.way_points;
+      let mycordata = [];
+      way_points.forEach(element => {
+        mycordata.push(coordinates[element]);
+      });
+      //console.log(mycordata);
+      let porcgeodata = {
+        "type": "LineString",
+        "coordinates": mycordata,
+      }
+      return of(porcgeodata);
+    });
+  }
+  getGeometrydata(geometrydata) {
+    let maxpoint = 50;
+    let start = geometrydata.splice(0, 1)[0];
+    let end = geometrydata.splice(geometrydata.length - 1, 1)[0];
+    //console.log(start);
+    //console.log(end);
+    let step = Math.ceil(geometrydata.length / maxpoint);
+    let porcgeodata = {};
+    let cordatas = [];
+    cordatas.push(start);
+    for (let index = 0; index < geometrydata.length; index += step) {
+      const element = geometrydata[index];
+      //console.log(element);
+      cordatas.push(element);
+    }
+    cordatas.push(end);
+    porcgeodata = {
+      "coordinates": cordatas,
+    }
+
+    return porcgeodata;
+  }
+  AddOverGeojsonLayer(geometrydata) {
+    let geoJsonMetaData: GeoJsonMetaData = new GeoJsonMetaData();
+    geoJsonMetaData.name = "mycar";
+    geoJsonMetaData.colorMetaData.SetDefatulFGColor();
+    geoJsonMetaData.lineString = {
+      type: geometrydata.type,
+      coordinates: geometrydata.coordinates
+    };
+    this.osmap.AddOverGeojsonLayer(geoJsonMetaData);
+  }
+  // AddOverGeojsonLayer(geometrydata) {
+  //   let features = geometrydata.features;
+  //   //console.log(features);
+  //   let geometry = features[0].geometry;
+  //   let geoJsonMetaData: GeoJsonMetaData = new GeoJsonMetaData();
+  //   geoJsonMetaData.name = "mycar";
+  //   geoJsonMetaData.colorMetaData.SetDefatulFGColor();
+  //   geoJsonMetaData.lineString = {
+  //     type: geometry.type,
+  //     coordinates: geometry.coordinates
+  //   };
+  //   this.osmap.AddOverGeojsonLayer(geoJsonMetaData);
+  // }
   TestUpdateMarkClusterPosition() {
     this.osmDataService.getInterval().subscribe(data => {
       let mkclgroupmetadata: MakerClusterGroupMetaData;
